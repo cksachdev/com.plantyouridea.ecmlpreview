@@ -16,9 +16,6 @@
         "help": {
             "src": "editor/help.md",
             "dataType": "text"
-        },
-        "init-data": {}
-    },
-    "renderer": {
+        }
     }
 }
