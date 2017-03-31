@@ -1,44 +1,43 @@
 <script type="text/ng-template" id="partials.ecmlpreview.html">
     <style>
+    .ngdialog-content {
+        background: none !important;
+    }
     
-    .image {
+    .frame {
+        position: relative;
+        background: white;
+        margin: 0 auto;
+        padding: 0;
+        resize: both;
+        overflow: auto;
         height: 500px;
         width: 1000px;
         background: url(https://localhost:8081/com.plantyouridea.ecmlpreview-1.0/editor/images/editor-frame.png) no-repeat center 0;
-        background-size: 1004px 504px;
-      }
-      #previewContentIframe {
+    }
+    
+    .frame .preview {
+        background: black;
+        color: white;
         width: 720px;
         height: 405px;
+        margin: 0;
         position: relative;
-        top: 42px;
-        left: 111px;
-      }
-      .child {
-        height: 500px;
-        width: 1000px;
-        position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      }
+        padding: 0;
+        left: 140px;
+        top: 48px;
+    }
+    
+    iframe {
+        padding: 0;
+        margin: 0;
+    }
 
     </style>
-    
-    <div class="child">
-      <div class="image">
-        <iframe id="previewContentIframe"></iframe>
-      </div>
-  </div>
-    <!-- var p = 50;
-    var q = 139;
-    var changePosition = function(x,y) {
-      p = p+x;
-      q = q+y;
-      jQuery('.child').offset({
-        left: p,
-        top: q
-      });
-    } -->
+    <main class="frame">
+        <div class="preview">
+            <iframe id="previewContentIframe" src="https://s3.ap-south-1.amazonaws.com/ekstep-public-dev/preview/preview.html?webview=true&&id=domain_45479" width="720" height="405" frameBorder="0"></iframe>
+        </div>
+    </main>
 </script>
 

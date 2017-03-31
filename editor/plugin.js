@@ -70,16 +70,15 @@ EkstepEditor.basePlugin.extend({
         var meta = EkstepEditorAPI.getService('content').getContentMeta(EkstepEditorAPI.getContext('contentId'));
         var modalController = function($scope) {
             $scope.$on('ngDialog.opened', function() {
-
-                var p = 50;
-                var q = 139;
-                var changePosition = function(x,y) {
-                  p = p+x;
-                  q = q+y;
-                  jQuery('.child').offset({
-                    left: p,
-                    top: q
-                  });
+                var marginX = 140;
+                var marginY = 48;
+                var changePosition = function(l, t) {
+                    xVal = l - marginX;
+                    yVal = t - marginY;
+                    jQuery('.frame').offset({
+                        left: xVal,
+                        top: yVal
+                    });
                 }
 
                 var previewContentIframe = EkstepEditorAPI.jQuery('#previewContentIframe')[0];
