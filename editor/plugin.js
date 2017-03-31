@@ -1,6 +1,6 @@
 /**
  * @author Chetan Sachdev <mail@chetansachdev.com>
- * @listens atpreview:show
+ * @listens ecmlpreview:show
  */
 EkstepEditor.basePlugin.extend({
     /**
@@ -29,14 +29,13 @@ EkstepEditor.basePlugin.extend({
      */
     initialize: function() {
         var instance = this;
-        EkstepEditorAPI.addEventListener("atpreview:show", instance.initPreview, instance);
+        EkstepEditorAPI.addEventListener("ecmlpreview:show", instance.initPreview, this);
         setTimeout(function() {
-            Mousetrap.bind(['ctrl+enter', 'command+enter'], function() {
-                // alert("Command + Enter");
-                instance.initPreview(undefined, instance);
+            Mousetrap.bind(['ctrl+enter', 'command+enter'], function(){
+                instance.launchPreview(false)
             });
-            Mousetrap.bind(['ctrl+shift+enter', 'command+shift+enter'], function() {
-                // instance.initPreview(undefined, instance);
+            Mousetrap.bind(['ctrl+shift+enter', 'command+shift+enter'], function(){
+                instance.launchPreview(true)
             });
             alert("Events registered!!");
         }, 1000);
@@ -45,6 +44,11 @@ EkstepEditor.basePlugin.extend({
 
         var templatePath = EkstepEditorAPI.resolvePluginResource(this.manifest.id, this.manifest.ver, "editor/ecmlpreview.html");
         EkstepEditorAPI.getService('popup').loadNgModules(templatePath);
+    },
+    launchPreview: function(currentStage) {
+        org.ekstep.contenteditor.api.getCanvas().deactivateAll().renderAll();
+        org.ekstep.pluginframework.eventManager.dispatchEvent("ecmlpreview:show", { contentBody: org.ekstep.contenteditor.stageManager.toECML(), 'currentStage': currentStage });
+        // org.ekstep.contenteditor.api.dispatchEvent('config:settings:show', { id: org.ekstep.contenteditor.api.getCurrentStage().id });
     },
     /**
      *
@@ -77,18 +81,18 @@ EkstepEditor.basePlugin.extend({
                 $element.rangeslider({
                     polyfill: false,
                     onInit: function() {
-                      $handle = $('.rangeslider__handle', this.$range);
-                      updateHandle($handle[0], this.value);
+                        $handle = $('.rangeslider__handle', this.$range);
+                        updateHandle($handle[0], this.value);
                     },
                     onSlide: function(position, value) {
-                        jQuery('.preview').css('opacity',value);
+                        jQuery('.preview').css('opacity', value);
                     }
                 }).on('input', function() {
                     updateHandle($handle[0], this.value);
                 });
 
                 function updateHandle(el, val) {
-                  el.textContent = val;
+                    el.textContent = val;
                 }
 
                 var marginX = 140;

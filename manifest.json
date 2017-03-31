@@ -2,7 +2,6 @@
     "id": "com.plantyouridea.ecmlpreview",
     "ver": "1.0",
     "author": "Chetan Sachdev",
-    "type": "widget",
     "title": "com.plantyouridea.ecmlpreview Plugin",
     "description": "",
     "publishedDate": "",
@@ -18,19 +17,8 @@
             "src": "editor/help.md",
             "dataType": "text"
         },
-        "init-data": {
-            "type": "circle",
-            "radius": 90,
-            "strokeWidth": 10,
-            "x": 10,
-            "y": 10,
-            "w": 10,
-            "h": 10,
-            "fill": "",
-            "stroke": "rgba(0,192,255,0.5)"
-        }
+        "init-data": {}
     },
     "renderer": {
-        "main": "renderer/plugin.js"
     }
 }
