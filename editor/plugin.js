@@ -31,11 +31,11 @@ EkstepEditor.basePlugin.extend({
         var instance = this;
         EkstepEditorAPI.addEventListener("atpreview:show", instance.initPreview, instance);
         setTimeout(function() {
-            Mousetrap.bind('command+enter', function() {
+            Mousetrap.bind('ctrl+enter', function() {
                 alert("Command + Enter");
                 instance.initPreview(undefined, instance);
             });
-            Mousetrap.bind('command+shift+enter', function() {
+            Mousetrap.bind('ctrl+shift+enter', function() {
                 alert("Command + Shift + Enter");
                 // instance.initPreview(undefined, instance);
             });
@@ -71,9 +71,22 @@ EkstepEditor.basePlugin.extend({
         var meta = EkstepEditorAPI.getService('content').getContentMeta(EkstepEditorAPI.getContext('contentId'));
         var modalController = function($scope) {
             $scope.$on('ngDialog.opened', function() {
+
+                var p = 50;
+                var q = 139;
+                var changePosition = function(x,y) {
+                  p = p+x;
+                  q = q+y;
+                  jQuery('.child').offset({
+                    left: p,
+                    top: q
+                  });
+                }
+
                 var previewContentIframe = EkstepEditorAPI.jQuery('#previewContentIframe')[0];
                 previewContentIframe.src = instance.previewURL;
                 meta.contentMeta = _.isUndefined(meta.contentMeta) ? null : meta.contentMeta;
+                changePosition(instance.canvasOffset.left, instance.canvasOffset.top);
                 previewContentIframe.onload = function() {
                     previewContentIframe.contentWindow.setContentData(meta.contentMeta, instance.contentBody, { "showStartPage": true, "showEndPage": true });
                 };

@@ -44,3 +44,5 @@ Plugin.extend({
     }
 
 });
+
+//# sourceURL=preview.js

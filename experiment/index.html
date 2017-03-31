@@ -3,8 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <title>Hello World</title>
+    <style>
+    	.image {
+    		height: 500px;
+    		width: 1000px;
+    		background: url(images/editor-frame.png) no-repeat center 0;
+    		background-size: 1004px 504px;
+    	}
+    	#iframeSrc {
+		    width: 720px;
+    		height: 405px;
+    		position: relative;
+		    top: 50px;
+		    left: 138px;
+    	}
+    	.child {
+    		height: 500px;
+    		width: 1000px;
+    		position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+    	}
+    	#parent {
+    		height: 100vh;
+    	}
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 </head>
 <body>
-    
+	<div id="parent">
+		<div class="child">
+			<div class="image">
+				<iframe id="iframeSrc" src="https://s3.ap-south-1.amazonaws.com/ekstep-public-dev/preview/preview.html?webview=true&&id=domain_45479"></iframe>
+			</div>
+		</div>
+	</div>
+	<button onclick="changePosition(100,100);">ClickMe</button>
 </body>
+<script>
+    // var p = 50;
+    // var q = 139;
+    var p = 0, q = 0;
+    var changePosition = function(x,y) {
+    	p = p+x;
+    	q = q+y;
+    	jQuery('.child').offset({
+    		left: p,
+    		top: q
+    	});
+    }
+    </script>
 </html>
