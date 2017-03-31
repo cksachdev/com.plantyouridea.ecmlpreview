@@ -9,7 +9,9 @@
     "editor": {
         "main": "editor/plugin.js",
         "dependencies": [
-            { "type": "js", "src": "editor/libs/mousetrap.min.js" }
+            { "type": "js", "src": "editor/libs/rangeslider.min.js" },
+            { "type": "js", "src": "editor/libs/mousetrap.min.js" },
+            { "type": "css", "src": "editor/libs/rangeslider.min.css" }
         ],
         "menu": [],
         "help": {

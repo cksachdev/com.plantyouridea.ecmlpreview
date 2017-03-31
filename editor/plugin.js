@@ -70,6 +70,21 @@ EkstepEditor.basePlugin.extend({
         var meta = EkstepEditorAPI.getService('content').getContentMeta(EkstepEditorAPI.getContext('contentId'));
         var modalController = function($scope) {
             $scope.$on('ngDialog.opened', function() {
+
+                var $element = jQuery('input[type="range"]');
+                var $output = jQuery('output');
+                function updateOutput(el, val) {
+                    el.textContent = val;
+                }
+                $element.rangeslider({
+                    polyfill: false,
+                    onInit: function() {
+                        updateOutput($output[0], this.value);
+                    }
+                }).on('input', function() {
+                    updateOutput($output[0], this.value);
+                });
+
                 var marginX = 140;
                 var marginY = 48;
                 var changePosition = function(l, t) {
