@@ -1,7 +1,7 @@
 {
     "id": "com.plantyouridea.ecmlpreview",
     "ver": "1.0",
-    "author": "",
+    "author": "Chetan Sachdev",
     "type": "widget",
     "title": "com.plantyouridea.ecmlpreview Plugin",
     "description": "",
@@ -9,11 +9,7 @@
     "editor": {
         "main": "editor/plugin.js",
         "dependencies": [
-            {
-                "type": "plugin",
-                "plugin": "org.ekstep.spectrum",
-                "ver": "1.0"
-            }
+            { "type": "js", "src": "editor/libs/mousetrap.min.js" }
         ],
         "menu": [],
         "help": {

@@ -1,21 +1,94 @@
+/**
+ * @author Chetan Sachdev <mail@chetansachdev.com>
+ * @listens atpreview:show
+ */
 EkstepEditor.basePlugin.extend({
+    /**
+     *   @member type {String} plugin title
+     *   @memberof ecmlpreview
+     *
+     */
+    type: 'preview',
+    canvasOffset: undefined,
+    /**
+     *   @member previewURL {String} reverse proxy URL
+     *   @memberof ecmlpreview
+     *
+     */
+    previewURL: 'https://dev.ekstep.in/assets/public/preview/preview.html?webview=true',
+    /**
+     *   @member contentBody {Object} content body for preview
+     *   @memberof Preview
+     *
+     */
+    contentBody: undefined,
+    /**
+     *   registers events
+     *   @memberof preview
+     *
+     */
     initialize: function() {
+        var instance = this;
+        EkstepEditorAPI.addEventListener("atpreview:show", instance.initPreview, instance);
+        setTimeout(function() {
+            Mousetrap.bind('command+enter', function() {
+                alert("Command + Enter");
+                instance.initPreview(undefined, instance);
+            });
+            Mousetrap.bind('command+shift+enter', function() {
+                alert("Command + Shift + Enter");
+                // instance.initPreview(undefined, instance);
+            });
+            alert("Events registered!!");
+        }, 1000);
+
+        this.canvasOffset = EkstepEditorAPI.jQuery('#canvas').offset();
+
+        var templatePath = EkstepEditorAPI.resolvePluginResource(this.manifest.id, this.manifest.ver, "editor/ecmlpreview.html");
+        EkstepEditorAPI.getService('popup').loadNgModules(templatePath);
     },
-    newInstance: function() {
-        var props = this.convertToFabric(this.attributes);
-        this.editorObj = new fabric.Circle(props);
-        if (this.editorObj) this.editorObj.setStroke(props.stroke);
-    },
-    onConfigChange: function(key, value) {
-        var instance = EkstepEditorAPI.getCurrentObject();
-        var editorObj = instance.editorObj
-        switch (key) {
-            case "color":
-                editorObj.setStroke(value);
-                instance.attributes.stroke = value;
-                break;
+    /**
+     *
+     *   @param event {Object} event object from event bus.
+     *   @param data {Object} ecml
+     *   @memberof preview
+     */
+    initPreview: function(event, data) {
+        var instance = this;
+        instance.contentBody = data.contentBody;
+        if (data.currentStage) {
+            this.contentBody.theme.startStage = EkstepEditorAPI.getCurrentStage().id;
         }
-        EkstepEditorAPI.render();
-        EkstepEditorAPI.dispatchEvent('object:modified', { target: EkstepEditorAPI.getEditorObject() });
+        this.showPreview();
+    },
+    /**     
+     *   @memberof preview
+     */
+    showPreview: function() {
+        console.log(this.previewURL);
+        var instance = this;
+        var contentService = EkstepEditorAPI.getService('content');
+        var meta = EkstepEditorAPI.getService('content').getContentMeta(EkstepEditorAPI.getContext('contentId'));
+        var modalController = function($scope) {
+            $scope.$on('ngDialog.opened', function() {
+                var previewContentIframe = EkstepEditorAPI.jQuery('#previewContentIframe')[0];
+                previewContentIframe.src = instance.previewURL;
+                meta.contentMeta = _.isUndefined(meta.contentMeta) ? null : meta.contentMeta;
+                previewContentIframe.onload = function() {
+                    previewContentIframe.contentWindow.setContentData(meta.contentMeta, instance.contentBody, { "showStartPage": true, "showEndPage": true });
+                };
+            });
+        };
+
+        EkstepEditorAPI.getService('popup').open({
+            template: 'partials.ecmlpreview.html',
+            controller: ['$scope', modalController],
+            showClose: false,
+            width: 900,
+            className: 'ngdialog-theme-plain'
+        });
+
     }
 });
+
+//# sourceURL=previewplugin.js
