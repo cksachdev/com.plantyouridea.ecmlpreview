@@ -79,6 +79,9 @@ EkstepEditor.basePlugin.extend({
                     onInit: function() {
                       $handle = $('.rangeslider__handle', this.$range);
                       updateHandle($handle[0], this.value);
+                    },
+                    onSlide: function(position, value) {
+                        jQuery('.preview').css('opacity',value);
                     }
                 }).on('input', function() {
                     updateHandle($handle[0], this.value);
