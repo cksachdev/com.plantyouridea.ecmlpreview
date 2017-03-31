@@ -31,12 +31,11 @@ EkstepEditor.basePlugin.extend({
         var instance = this;
         EkstepEditorAPI.addEventListener("atpreview:show", instance.initPreview, instance);
         setTimeout(function() {
-            Mousetrap.bind('ctrl+enter', function() {
-                alert("Command + Enter");
+            Mousetrap.bind(['ctrl+enter', 'control+enter'], function() {
+                // alert("Command + Enter");
                 instance.initPreview(undefined, instance);
             });
-            Mousetrap.bind('ctrl+shift+enter', function() {
-                alert("Command + Shift + Enter");
+            Mousetrap.bind(['ctrl+shift+enter', 'control+shift+enter'], function() {
                 // instance.initPreview(undefined, instance);
             });
             alert("Events registered!!");
