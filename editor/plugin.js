@@ -71,19 +71,22 @@ EkstepEditor.basePlugin.extend({
         var modalController = function($scope) {
             $scope.$on('ngDialog.opened', function() {
 
-                var $element = jQuery('input[type="range"]');
-                var $output = jQuery('output');
-                function updateOutput(el, val) {
-                    el.textContent = val;
-                }
+                var $element = $('input[type="range"]');
+                var $handle;
+
                 $element.rangeslider({
                     polyfill: false,
                     onInit: function() {
-                        updateOutput($output[0], this.value);
+                      $handle = $('.rangeslider__handle', this.$range);
+                      updateHandle($handle[0], this.value);
                     }
                 }).on('input', function() {
-                    updateOutput($output[0], this.value);
+                    updateHandle($handle[0], this.value);
                 });
+
+                function updateHandle(el, val) {
+                  el.textContent = val;
+                }
 
                 var marginX = 140;
                 var marginY = 48;
