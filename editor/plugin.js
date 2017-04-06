@@ -32,10 +32,10 @@ EkstepEditor.basePlugin.extend({
         EkstepEditorAPI.addEventListener("ecmlpreview:show", instance.initPreview, this);
         setTimeout(function() {
             Mousetrap.bind(['ctrl+enter', 'command+enter'], function(){
-                instance.launchPreview(false)
+                instance.launchPreview(true)
             });
             Mousetrap.bind(['ctrl+shift+enter', 'command+shift+enter'], function(){
-                instance.launchPreview(true)
+                instance.launchPreview(false)
             });
             alert("Events registered!!");
         }, 1000);
