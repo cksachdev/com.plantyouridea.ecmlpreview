@@ -2,7 +2,7 @@
  * @author Chetan Sachdev <mail@chetansachdev.com>
  * @listens ecmlpreview:show
  */
-EkstepEditor.basePlugin.extend({
+org.ekstep.contenteditor.basePlugin.extend({
     /**
      *   @member type {String} plugin title
      *   @memberof ecmlpreview
@@ -29,7 +29,7 @@ EkstepEditor.basePlugin.extend({
      */
     initialize: function() {
         var instance = this;
-        EkstepEditorAPI.addEventListener("ecmlpreview:show", instance.initPreview, this);
+        org.ekstep.contenteditor.api.addEventListener("ecmlpreview:show", instance.initPreview, this);
         setTimeout(function() {
             Mousetrap.bind(['ctrl+enter', 'command+enter'], function(){
                 instance.launchPreview(true)
@@ -40,10 +40,10 @@ EkstepEditor.basePlugin.extend({
             alert("Events registered!!");
         }, 1000);
 
-        this.canvasOffset = EkstepEditorAPI.jQuery('#canvas').offset();
+        this.canvasOffset = org.ekstep.contenteditor.api.jQuery('#canvas').offset();
 
-        var templatePath = EkstepEditorAPI.resolvePluginResource(this.manifest.id, this.manifest.ver, "editor/ecmlpreview.html");
-        EkstepEditorAPI.getService('popup').loadNgModules(templatePath);
+        var templatePath = org.ekstep.contenteditor.api.resolvePluginResource(this.manifest.id, this.manifest.ver, "editor/ecmlpreview.html");
+        org.ekstep.contenteditor.api.getService('popup').loadNgModules(templatePath);
     },
     launchPreview: function(currentStage) {
         org.ekstep.contenteditor.api.getCanvas().deactivateAll().renderAll();
@@ -60,7 +60,7 @@ EkstepEditor.basePlugin.extend({
         var instance = this;
         instance.contentBody = data.contentBody;
         if (data.currentStage) {
-            this.contentBody.theme.startStage = EkstepEditorAPI.getCurrentStage().id;
+            this.contentBody.theme.startStage = org.ekstep.contenteditor.api.getCurrentStage().id;
         }
         this.showPreview();
     },
@@ -70,8 +70,8 @@ EkstepEditor.basePlugin.extend({
     showPreview: function() {
         console.log(this.previewURL);
         var instance = this;
-        var contentService = EkstepEditorAPI.getService('content');
-        var meta = EkstepEditorAPI.getService('content').getContentMeta(EkstepEditorAPI.getContext('contentId'));
+        var contentService = org.ekstep.contenteditor.api.getService('content');
+        var meta = org.ekstep.contenteditor.api.getService('content').getContentMeta(org.ekstep.contenteditor.api.getContext('contentId'));
         var modalController = function($scope) {
             $scope.$on('ngDialog.opened', function() {
 
@@ -106,17 +106,24 @@ EkstepEditor.basePlugin.extend({
                     });
                 }
 
-                var previewContentIframe = EkstepEditorAPI.jQuery('#previewContentIframe')[0];
+                var previewContentIframe = org.ekstep.contenteditor.api.jQuery('#previewContentIframe')[0];
                 previewContentIframe.src = instance.previewURL;
                 meta.contentMeta = _.isUndefined(meta.contentMeta) ? null : meta.contentMeta;
                 changePosition(instance.canvasOffset.left, instance.canvasOffset.top);
+                var userData = ecEditor.getService('telemetry').context;
                 previewContentIframe.onload = function() {
-                    previewContentIframe.contentWindow.setContentData(meta.contentMeta, instance.contentBody, { "showStartPage": true, "showEndPage": true });
+                    var configuration = {};
+                    userData.etags = {};
+                    configuration.context = {'mode':'edit','contentId':meta.identifier,'sid':userData.sid,'uid':userData.uid, 'channel': userData.channel, 'pdata': userData.pdata, 'app': userData.etags.app, 'dims': userData.etags.dims, 'partner': userData.etags.partner }; 
+                    configuration.config = {'showEndPage':'true','showStartPage':'true'};
+                    configuration.metadata = meta.contentMeta; configuration.data = instance.contentBody;
+                    // previewContentIframe.contentWindow.setContentData(meta.contentMeta, instance.contentBody, { "showStartPage": true, "showEndPage": true });
+                    previewContentIframe.contentWindow.initializePreview(configuration);
                 };
             });
         };
 
-        EkstepEditorAPI.getService('popup').open({
+        org.ekstep.contenteditor.api.getService('popup').open({
             template: 'partials.ecmlpreview.html',
             controller: ['$scope', modalController],
             showClose: false,
