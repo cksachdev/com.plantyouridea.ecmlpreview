@@ -15,7 +15,7 @@ org.ekstep.contenteditor.basePlugin.extend({
      *   @memberof ecmlpreview
      *
      */
-    previewURL: 'https://dev.ekstep.in/assets/public/preview/preview.html?webview=true',
+    previewURL: '/content/preview/preview.html?webview=true',
     /**
      *   @member contentBody {Object} content body for preview
      *   @memberof Preview
