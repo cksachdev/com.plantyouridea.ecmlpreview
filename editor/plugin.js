@@ -110,14 +110,27 @@ org.ekstep.contenteditor.basePlugin.extend({
                 previewContentIframe.src = instance.previewURL;
                 meta.contentMeta = _.isUndefined(meta.contentMeta) ? null : meta.contentMeta;
                 changePosition(instance.canvasOffset.left, instance.canvasOffset.top);
-                var userData = ecEditor.getService('telemetry').context;
                 previewContentIframe.onload = function() {
                     var configuration = {};
-                    userData.etags = {};
-                    configuration.context = {'mode':'edit','contentId':meta.identifier,'sid':userData.sid,'uid':userData.uid, 'channel': userData.channel, 'pdata': userData.pdata, 'app': userData.etags.app, 'dims': userData.etags.dims, 'partner': userData.etags.partner }; 
-                    configuration.config = {'showEndPage':'true','showStartPage':'true'};
+                    var userData = {};
+                    userData.etags = ecEditor.getContext('etags') || [];
+                    configuration.context = {
+                    	'mode':'edit',
+                    	'contentId':ecEditor.getContext('contentId'),
+                    	'sid':ecEditor.getContext('sid'),
+                    	'uid': ecEditor.getContext('uid'), 
+	                    'channel': ecEditor.getContext('channel') || "in.ekstep", 
+	                    'pdata': ecEditor.getContext('pdata') || {id: "in.ekstep", pid: "", ver: "1.0"}, 
+	                    'app': userData.etags.app || [], 
+	                    'dims': userData.etags.dims || [], 
+	                    'partner': userData.etags.partner || []
+                    }; 
+                    if (ecEditor.getConfig('previewConfig')) {
+                    	configuration.config = ecEditor.getConfig('previewConfig');
+                	} else {
+                    	configuration.config = {showEndpage:true};
+                	}
                     configuration.metadata = meta.contentMeta; configuration.data = instance.contentBody;
-                    // previewContentIframe.contentWindow.setContentData(meta.contentMeta, instance.contentBody, { "showStartPage": true, "showEndPage": true });
                     previewContentIframe.contentWindow.initializePreview(configuration);
                 };
             });
